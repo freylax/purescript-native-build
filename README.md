@@ -49,6 +49,7 @@ stumbled about some issues which I want to outline here as follows.
 # Install Haskell Stack
 # Install purescript
 # Install spago
+# Install zephyr
 # Build and install purescript native cpp transpiler 'pscpp'
 # from git@github.com:freylax/purescript-native.git
 
