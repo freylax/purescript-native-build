@@ -40,16 +40,13 @@ USED_CPP=$(USED_FFI) $(USED_PSC) $(wildcard output/cpp/runtime/*.cpp)
 
 # purs -> corefn -> dead code elimination -> cpp
 #
-# we set the timestamp of the dce files to the ones in purs
-# because these are the logical correct ones, otherwise
-# we would rebuild the generated sources evry time
+# we use a wraper for zephyr to get the timestamps of the dce files
+# only changed if it realy has a new content
 .PHONY: codegen
 codegen:
 	@echo "codegen" 
 	@spago build -u '--codegen corefn -o output/purs' \
-                     -t 'rm -fr output/dce/*'             \
-                     -t 'zephyr Main.main -g corefn -i output/purs -o output/dce' \
-                     -t '(cd output/dce;for d in *; do touch $$d/corefn.json -r ../purs/$$d/corefn.json; done)' \
+                     -t './zephyr.bash "Main"' \
                      -t 'pscpp output/dce/*/corefn.json'
 
 USED_OBJ = $(USED_CPP:.cpp=.o)
@@ -65,6 +62,7 @@ $(BIN_DIR)/main: $(USED_OBJ)
 	@echo "Linking" $@
 	@mkdir -p $(BIN_DIR)
 	@$(CXX) $^ -o $@ $(LDFLAGS)
+
 
 debug: codegen
 	@$(MAKE) $(BIN_DIR)/main CXXFLAGS+=$(DEBUG)
