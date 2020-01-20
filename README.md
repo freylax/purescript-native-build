@@ -42,6 +42,8 @@ stumbled about some issues which I want to outline here as follows.
 		(Main.main) but should be able to get sets of module names for multiple entry points.
 		After this one would be able to partion these into shared libs and plugins etc efficently.
 
+We have implemented this for GNU Make and CMake. 
+
 # How to build?
 
 ```bash
@@ -63,8 +65,14 @@ git submodule init
 git submodule update
 
 # in the Makefile check that the right pscpp will be used
-
-# compile the project
-
+# compile the project using GNU Make
+	
 make debug
+./output/bin/main
+# or for using CMake:
 
+mkdir build
+cd build
+cmake ..
+make
+./main
